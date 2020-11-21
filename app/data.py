@@ -17,8 +17,8 @@ improve_url = 'https://api.deepai.org/api/torch-srgan'
 colorize_url = 'https://api.deepai.org/api/colorizer'
 
 # Database
-DB_HOST = os.environ.get('DB_HOST', 'localhost')
-DB_NAME = os.environ.get('DB_NAME', 'magicphoto')
+DB_HOST = os.environ.get('DB_HOST', 'mongo')
+DB_NAME = os.environ.get('DB_NAME', 'aimagicbot')
 DB_PORT = int(os.environ.get('DB_PORT', 27017))
 
 # Translation function

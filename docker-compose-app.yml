@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+  aimagicbot:
+    build: .
+    container_name: aimagicbot
+    env_file:
+      - app.env
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.aimagicbot.rule=Host(`aimagicbot.fastbots.net`)
+      - traefik.http.routers.aimagicbot.entrypoints=websecure
+      - traefik.http.routers.aimagicbot.tls.certresolver=letsencrypt
+      - traefik.http.services.aimagicbot.loadbalancer.server.port=8084
+    networks:
+      - service
+    restart: on-failure
+
+networks:
+  service:
+    external:
+      name: docker_network
