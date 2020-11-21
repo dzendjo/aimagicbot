@@ -3,30 +3,28 @@ import os
 
 import callbacks
 import commands
-import dice
-import echo
-import inline
 import keyboards
 import mybot
-import myenigma
-import poll
 import rocketgram
-import send
+import statistics
 import unknown
+
+
+import data
+from templates import templates
+
+import j2tools
+import jinja2
+import jinja2.ext
 
 
 # avoid to remove "unused" imports by optimizers
 def fix_imports():
     _ = callbacks
     _ = commands
-    _ = echo
     _ = keyboards
-    _ = myenigma
-    _ = inline
-    _ = send
-    _ = dice
+    _ = statistics
     _ = unknown
-    _ = poll
 
 
 logger = logging.getLogger('minibots.engine')
@@ -40,15 +38,22 @@ def main():
     if mode not in ('updates', 'webhook', 'heroku'):
         raise TypeError('MODE must be `updates` or `webhook` or `heroku`!')
 
-    logging.basicConfig(format='%(asctime)s - %(levelname)-5s - %(name)-25s: %(message)s')
+    logging.basicConfig(format='%(asctime)s - %(levelname)-5s - %(name)-30s: %(message)s')
     logging.basicConfig(level=logging.ERROR)
     logging.getLogger('engine').setLevel(logging.INFO)
-    logging.getLogger('mybot').setLevel(logging.DEBUG)
+    logging.getLogger('ytb').setLevel(logging.DEBUG)
     logging.getLogger('rocketgram').setLevel(logging.DEBUG)
     logging.getLogger('rocketgram.raw.in').setLevel(logging.INFO)
     logging.getLogger('rocketgram.raw.out').setLevel(logging.INFO)
 
+    logger = logging.getLogger('ytb.settings')
+
     logger.info('Starting bot''s template in %s...', mode)
+
+    _loader = jinja2.PrefixLoader({k: j2tools.YamlLoader(v) for k, v in templates.items()})
+    _jinja = jinja2.Environment(loader=_loader, trim_blocks=True, lstrip_blocks=True,
+                                extensions=[jinja2.ext.LoopControlExtension])
+    data.get_t = j2tools.t_factory(_jinja)
 
     bot = mybot.get_bot(os.environ['TOKEN'].strip())
 

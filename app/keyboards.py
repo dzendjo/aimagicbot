@@ -1,86 +1,45 @@
 from mybot import router
-from rocketgram import MessageType, ReplyKeyboard, ReplyKeyboardRemove
+from rocketgram import MessageType, InlineKeyboard
 from rocketgram import context, commonfilters, ChatType, SendMessage
+import data
 
 
-@router.handler
-@commonfilters.chat_type(ChatType.private)
-@commonfilters.command('/keyboard')
-async def keyboard_command():
-    """Shows how to create reply keyboard"""
 
-    kb = ReplyKeyboard()
-    kb.text("😃 Super").row()
-    kb.text("🙃 Great").row()
-    kb.text("🤨 Not bad").row()
-    kb.text("😖 All bad").row()
-    kb.text("/cancel")
+async def get_process_photo_ik(telegraph_id):
+    T = data.current_T.get()
+    kb = InlineKeyboard()
 
-    await SendMessage(context.message.user.user_id,
-                      '🔹 How are you filling?',
-                      reply_markup=kb.render()).send2()
+    text = T('process_kb/colorize')
+    kb.callback(text, f'colorize {telegraph_id}').row()
 
+    text = T('process_kb/improve')
+    kb.callback(text, f'send_as_file {telegraph_id}').row()
 
-@router.handler
-@commonfilters.chat_type(ChatType.private)
-@commonfilters.command('/keyboard_location')
-async def keyboard_location_command():
-    """Shows how to create location button"""
+    # text = T('process_kb/improve')
+    # kb.callback(text, f'improve {telegraph_id}').row()
 
-    kb = ReplyKeyboard()
-    kb.location("🗺 Send location").row()
-    kb.text("/cancel")
-
-    await SendMessage(context.message.user.user_id,
-                      '🔹 Send me your location.',
-                      reply_markup=kb.render()).send2()
+    return kb
 
 
-@router.handler
-@commonfilters.chat_type(ChatType.private)
-@commonfilters.message_type(MessageType.location)
-async def got_location():
-    """Reaction on location"""
+async def get_process_document_ik(telegraph_id):
+    T = data.current_T.get()
+    kb = InlineKeyboard()
 
-    await SendMessage(context.message.user.user_id,
-                      '🔹 Now i known where are you. 😄',
-                      reply_markup=ReplyKeyboardRemove(),
-                      reply_to_message_id=context.message.message_id).send2()
+    text = T('process_kb/colorize')
+    kb.callback(text, f'colorize {telegraph_id}').row()
 
+    text = T('process_kb/improve')
+    kb.callback(text, f'improve {telegraph_id}').row()
 
-@router.handler
-@commonfilters.chat_type(ChatType.private)
-@commonfilters.command('/keyboard_contact')
-async def keyboard_contact_command():
-    """Shows how to create contact button"""
-
-    kb = ReplyKeyboard()
-    kb.contact("☎️ Send contact").row()
-    kb.text("/cancel")
-
-    await SendMessage(context.message.user.user_id,
-                      '🔹 Send me your contact.',
-                      reply_markup=kb.render()).send2()
+    return kb
 
 
-@router.handler
-@commonfilters.chat_type(ChatType.private)
-@commonfilters.message_type(MessageType.contact)
-async def got_contact():
-    """Reaction on contact"""
+async def get_send_as_file_ik(telegraph_id):
+    T = data.current_T.get()
+    kb = InlineKeyboard()
 
-    await SendMessage(context.message.user.user_id,
-                      '🔹 Now i known your phone. 😄',
-                      reply_markup=ReplyKeyboardRemove(),
-                      reply_to_message_id=context.message.message_id).send2()
+    kb.callback(T('send_as_file/use_this'), f'improve {telegraph_id}').row()
+    kb.callback(T('send_as_file/use_file'), 'send_as_file_info').row()
 
+    return kb
 
-@router.handler
-@commonfilters.chat_type(ChatType.private)
-@commonfilters.command('/cancel')
-def cancel_command():
-    """Removes current reply keyboard"""
-
-    SendMessage(context.message.user.user_id,
-                "🔹 What next?",
-                reply_markup=ReplyKeyboardRemove()).webhook()
