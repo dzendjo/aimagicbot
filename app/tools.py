@@ -5,6 +5,10 @@ import requests
 import datetime
 import data
 from models import User
+import logging
+
+
+logger = logging.getLogger('minibots.engine')
 
 
 async def register_user(rg_user):
@@ -39,6 +43,7 @@ async def upload_to_telegraph(file_id):
     async with session.post('https://telegra.ph/upload', data=form) as response:
         resp = await response.json()
         if 'error' in resp:
+            logger.error(resp)
             return resp
         else:
             p = (await response.json())[0]['src']

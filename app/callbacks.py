@@ -7,6 +7,10 @@ import data
 from models import User
 from data import jinja, process_images
 from keyboards import get_send_as_file_ik
+import logging
+
+
+logger = logging.getLogger('minibots.engine')
 
 
 async def send_process_message(chat_id):
@@ -54,6 +58,7 @@ async def reaction_on_colorized():
                 await SendPhoto(context2.user.user_id, out_image_url).send2()
                 await SendDocument(context2.user.user_id, out_image_url, caption=T('full_quality')).send2()
             except Exception as e:
+                logger.error(resp)
                 await SendMessage(context2.user.user_id, T('errors/process')).send2()
 
     user.process_flag = False

@@ -1,5 +1,6 @@
 # Dev
 app.env
+docker-compose-app.yml
 
 .idea
 
