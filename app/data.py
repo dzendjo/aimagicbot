@@ -22,7 +22,6 @@ DB_PORT = int(os.environ.get('DB_PORT', 27017))
 # Translation function
 current_T = ContextVar('current_T')
 get_t = None
-# context2 = ContextVar('context2')
 
 current_user = ContextVar('current_user')
 
