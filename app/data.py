@@ -11,8 +11,6 @@ jinja = Environment(loader=YamlLoader('templates.yml'))
 
 process_images = ['🌇', '🌆', '🏙']
 
-ai_api_key = '46d90da1-985c-44a9-9841-d7f45770df2f'
-
 improve_url = 'https://api.deepai.org/api/torch-srgan'
 colorize_url = 'https://api.deepai.org/api/colorizer'
 
