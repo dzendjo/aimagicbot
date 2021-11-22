@@ -57,14 +57,3 @@ async def improve_resolution(image_url):
 
 async def image_colorize(image_url):
     pass
-
-#
-# import requests
-# r = requests.post(
-#     data.colorize_url,
-#     data={
-#         'image': 'https://telegra.ph/file/ab80e7635b5a07bcd10c3.jpg',
-#     },
-#     headers={'api-key': '46d90da1-985c-44a9-9841-d7f45770df2f'}
-# )
-# print(r.json())
