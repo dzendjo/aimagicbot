@@ -13,4 +13,4 @@ from models import User
 async def start_command():
     T = data.current_T.get()
     count = await User.count_documents()
-    await SendMessage(context.user.user_id, count).send2()
+    await SendMessage(context.user.user_id, count).send()

@@ -21,7 +21,7 @@ async def send_process_message(chat_id):
     dots = 1
     img_index = 0
     mt = process_images[img_index] + ' ' + process_text + '.' * dots + add_process_text
-    resp = await SendMessage(chat_id, mt).send2()
+    resp = await SendMessage(chat_id, mt).send()
     while True:
         if user.process_flag:
             await asyncio.sleep(1)
@@ -29,9 +29,9 @@ async def send_process_message(chat_id):
             img_index = img_index + 1 if img_index < len(process_images) - 1 else 0
             dots = dots + 1 if dots < 3 else 1
             mt = process_images[img_index] + " " + process_text + '.' * dots + add_process_text
-            await EditMessageText(mt, chat_id, resp.message_id).send2()
+            await EditMessageText(mt, chat_id, resp.message_id).send()
         else:
-            await EditMessageText(T('task_complete'), chat_id, resp.message_id).send2()
+            await EditMessageText(T('task_complete'), chat_id, resp.message_id).send()
             return resp.message_id
 
 
@@ -39,7 +39,7 @@ async def send_process_message(chat_id):
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('colorize')
 async def reaction_on_colorized():
-    await AnswerCallbackQuery(context.callback.query_id).send2()
+    await AnswerCallbackQuery(context.callback.query_id).send()
     user = await User.find_one(context.user.user_id)
     telegraph_id = context.callback.data.split()[1]
     image_url = f'https://telegra.ph/file/{telegraph_id}.jpg'
@@ -55,11 +55,11 @@ async def reaction_on_colorized():
             try:
                 resp = await response.json()
                 out_image_url = resp['output_url']
-                await SendPhoto(context.user.user_id, out_image_url).send2()
-                await SendDocument(context.user.user_id, out_image_url, caption=T('full_quality')).send2()
+                await SendPhoto(context.user.user_id, out_image_url).send()
+                await SendDocument(context.user.user_id, out_image_url, caption=T('full_quality')).send()
             except Exception as e:
                 logger.error(resp)
-                await SendMessage(context.user.user_id, T('errors/process')).send2()
+                await SendMessage(context.user.user_id, T('errors/process')).send()
 
     user.process_flag = False
     await user.commit()
@@ -69,7 +69,7 @@ async def reaction_on_colorized():
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('improve')
 async def reaction_on_improve():
-    await AnswerCallbackQuery(context.callback.query_id).send2()
+    await AnswerCallbackQuery(context.callback.query_id).send()
     user = await User.find_one(context.user.user_id)
     telegraph_id = context.callback.data.split()[1]
     image_url = f'https://telegra.ph/file/{telegraph_id}.jpg'
@@ -85,10 +85,10 @@ async def reaction_on_improve():
             try:
                 resp = await response.json()
                 out_image_url = resp['output_url']
-                await SendDocument(context.user.user_id, out_image_url).send2()
-                await SendMessage(context.user.user_id, T('post_mt')).send2()
+                await SendDocument(context.user.user_id, out_image_url).send()
+                await SendMessage(context.user.user_id, T('post_mt')).send()
             except Exception as e:
-                await SendMessage(context.user.user_id, T('errors/process')).send2()
+                await SendMessage(context.user.user_id, T('errors/process')).send()
 
     user.process_flag = False
     await user.commit()
@@ -100,19 +100,19 @@ async def reaction_on_improve():
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('send_as_file')
 async def reaction_on_suggest():
-    await AnswerCallbackQuery(context.callback.query_id).send2()
+    await AnswerCallbackQuery(context.callback.query_id).send()
     telegraph_id = context.callback.data.split()[1]
     T = data.current_T.get()
     kb = await get_send_as_file_ik(telegraph_id)
-    await SendMessage(context.user.user_id, T('send_as_file/mt'), reply_markup=kb.render()).send2()
+    await SendMessage(context.user.user_id, T('send_as_file/mt'), reply_markup=kb.render()).send()
 
 
 @router.handler
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('send_as_file_info')
 async def reaction_on_suggest():
-    await AnswerCallbackQuery(context.callback.query_id).send2()
+    await AnswerCallbackQuery(context.callback.query_id).send()
     T = data.current_T.get()
-    await SendMessage(context.user.user_id, T('send_as_file/use_file_mt'), disable_web_page_preview=False).send2()
+    await SendMessage(context.user.user_id, T('send_as_file/use_file_mt'), disable_web_page_preview=False).send()
 
 

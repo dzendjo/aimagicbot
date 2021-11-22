@@ -28,3 +28,4 @@ current_user = ContextVar('current_user')
 default_lang = 'ru'
 
 send_as_file_url = 'https://telegra.ph/file/de7645aa04ee086eae869.jpg'
+ai_api_key = '46d90da1-985c-44a9-9841-d7f45770df2f'

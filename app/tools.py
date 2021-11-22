@@ -30,7 +30,7 @@ async def register_user(rg_user):
 async def upload_to_telegraph(file_id):
     response = await GetFile(file_id).send()
     API_FILE_URL = 'https://api.telegram.org/file/bot{}/'.format(context.bot.token)
-    url = API_FILE_URL + response.result.file_path
+    url = API_FILE_URL + response.file_path
 
     session: ClientSession = context.bot.connector._session
 
